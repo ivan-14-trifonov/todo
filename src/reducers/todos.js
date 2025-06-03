@@ -18,6 +18,8 @@ const todos = (state = [], action) => {
                       }
                     : todo
             );
+        case 'CLEAR_COMPLETED':
+            return state.filter(todo => !todo.completed);
         default:
             return state;
     }
