@@ -9,8 +9,8 @@ import {
   IconButton,
 } from '@mui/material';
 
-const Todo = ({ onClick, completed, text }) => {
-  const handleToggle = () => onClick();
+const Todo = ({ onToggle, completed, text }) => {
+  const handleToggle = () => onToggle();
 
   return (
     <ListItem>
@@ -37,7 +37,7 @@ const Todo = ({ onClick, completed, text }) => {
 };
 
 Todo.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onToggle: PropTypes.func.isRequired,
   completed: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired,
 };

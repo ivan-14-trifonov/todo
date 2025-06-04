@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Todo from './Todo';
 import { List } from '@mui/material';
 
-const TodoList = ({ todos, onTodoClick }) => (
+const TodoList = ({ todos, onTodoToggle }) => (
   <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
     {todos.map((todo, index) => (
       <Todo
         key={index}
         {...todo}
-        onToggle={() => onTodoClick(index)}
+        onToggle={() => onTodoToggle(index)}
       />
     ))}
   </List>
@@ -23,7 +23,7 @@ TodoList.propTypes = {
       text: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
-  onTodoClick: PropTypes.func.isRequired,
+  onTodoToggle: PropTypes.func.isRequired,
 };
 
 export default TodoList;
