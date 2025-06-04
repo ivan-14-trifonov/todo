@@ -9,7 +9,7 @@ const TodoList = ({ todos, onTodoToggle }) => (
       <Todo
         key={index}
         {...todo}
-        onToggle={() => onTodoToggle(index)}
+        onToggle={() => onTodoToggle(todo.id)}
       />
     ))}
   </List>
