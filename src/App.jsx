@@ -3,6 +3,7 @@ import { fetchTodos, fetchUsers } from './api/api';
 import Filters from './components/Filters';
 import TodoList from './components/TodoList';
 import TodoDetail from './components/TodoDetail';
+import Pagination from './components/Pagination';
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -14,6 +15,10 @@ function App() {
   // Фильтры
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  
+  // Пагинация
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
   useEffect(() => {
     const loadData = async () => {
@@ -26,6 +31,7 @@ function App() {
         setTodos(todosData);
         setUsers(usersData);
         setError(null);
+        setCurrentPage(1); // Сброс на первую страницу при загрузке
       } catch (err) {
         setError(err.message);
       } finally {
@@ -52,8 +58,11 @@ function App() {
     return matchesSearch && matchesStatus;
   });
 
-  // Показываем только первые 15 задач
-  const displayedTodos = filteredTodos.slice(0, 15);
+  // Пагинация
+  const totalPages = Math.ceil(filteredTodos.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedTodos = filteredTodos.slice(startIndex, endIndex);
 
   // Получение пользователя по ID
   const getUserById = (userId) => {
@@ -107,6 +116,12 @@ function App() {
           setStatusFilter={setStatusFilter}
         />
 
+        {/* Счётчик задач */}
+        <div className="mb-4 text-sm text-gray-600">
+          Показано {displayedTodos.length} из {filteredTodos.length} задач
+          {totalPages > 1 && <span> (страница {currentPage} из {totalPages})</span>}
+        </div>
+
         {displayedTodos.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow mt-4">
             <svg className="w-16 h-16 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,10 +131,19 @@ function App() {
             <p className="text-gray-400 text-sm">Попробуйте изменить параметры поиска или фильтра</p>
           </div>
         ) : (
-          <TodoList 
-            todos={displayedTodos}
-            onSelectTodo={setSelectedTodo}
-          />
+          <>
+            <TodoList 
+              todos={displayedTodos}
+              onSelectTodo={setSelectedTodo}
+            />
+            {totalPages > 1 && (
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </>
         )}
       </main>
 
